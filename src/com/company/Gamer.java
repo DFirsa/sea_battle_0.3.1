@@ -8,8 +8,8 @@ import java.util.Scanner;
 public class Gamer {
     int[][][] field;
 
-    Gamer(int[][][] field) {
-      this.field = field;
+    Gamer(int[][][] wrfield) {
+      this.field = wrfield;
     }
 
     void add_ship() {
@@ -18,13 +18,13 @@ public class Gamer {
         for (int n = 0; n < 8; n++) {
             while (chek == false) {
 
-                System.out.println("Капитан, введите координаты коробля: x,y,z(от 1 до 8)");
+                System.out.println("Капитан, введите координаты коробля: x,y,z(от 1 до 6-7)");
                 Scanner sc = new Scanner(System.in);
                 int x = sc.nextInt();
                 int y = sc.nextInt();
                 int z = sc.nextInt();
 
-                if ((x > 8) || (y > 8) || (z > 8) || (x < 1) || (y < 1) || (z < 1)) {
+                if ((x > 6) || (y > 6) || (z > 7) || (x < 1) || (y < 1) || (z < 1)) {
                     System.out.println("Заданной точки не существует");
                 }
 
@@ -33,20 +33,83 @@ public class Gamer {
                     chek = false;
                 } else {
                     chek = true;
-                }
-                for (int i = 0; i < 3; i++) {
-                    for (int l = 0; l < 3; l++) {
-                        for (int q = 0; q < 3; q++) {
-                            field[x + i - 1][y + l - 1][z + q - 1] = 13;
+
+                    field[x][y][z] = 1;
+
+                    for (int i = 0; i < 3; i++) {
+                        for (int l = 0; l < 3; l++) {
+                            for (int q = 0; q < 3; q++) {
+                                if (field[x][y][z] != 1) {
+                                    field[x + i - 1][y + l - 1][z + q - 1] = 13;
+                                }
+                            }
                         }
                     }
                 }
-
-                field[x][y][z] = 1;
-
             }
         }
     }
+
+    void add_fleet(){
+        for (int i = 0; i < 5; i++){
+            add_ship();
+        }
+    }
+
+    int[][][] ret_field(){
+        return field;
+    }
+
+    void change(int[][][] f){
+        field = f;
+    }
+
+    boolean shoot(){
+        boolean chek = false;
+        boolean shot = false;
+
+        while (chek == false) {
+
+            System.out.println("Капитан, введите координаты коробля: x,y,z(от 1 до 6-7)");
+            Scanner sc = new Scanner(System.in);
+            int x = sc.nextInt();
+            int y = sc.nextInt();
+            int z = sc.nextInt();
+
+            if ((x > 6) || (y > 6) || (z > 7) || (x < 1) || (y < 1) || (z < 1)) {
+                System.out.println("Заданной точки не существует");
+
+            }
+
+            if (field[x][y][z] == 9){
+               System.out.println("Капитан, вы уже стреляли в эту точку");
+            }
+            else {
+                chek = true;
+
+                field[x][y][z] = 6;
+                if(field[x][y][z] == 1){
+                    for (int i = 0; i < 3; i++) {
+                        for (int l = 0; l < 3; l++) {
+                            for (int q = 0; q < 3; q++) {
+                                if (field[x][y][z] != 6 ) {
+                                    field[x + i - 1][y + l - 1][z + q - 1] = 9;
+                                }
+                            }
+                        }
+                    }
+                    shot = true;
+                }
+            }
+        }
+        return shot;
+    }
+
+    void win(){
+        System.out.println("Вы победили в сражении");
+    }
+
+
 }
 
 
